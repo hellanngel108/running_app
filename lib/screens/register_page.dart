@@ -1,6 +1,11 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:runningapp/services/auth.dart';
+import 'package:provider/provider.dart';
+import 'package:runningapp/provider/user_provider.dart';
+import 'package:runningapp/screens/home_page.dart';
+import 'package:runningapp/screens/login_page.dart';
+
+import 'package:runningapp/widgets/loading.dart';
 
 class RegisterPage extends StatefulWidget {
   @override
@@ -13,13 +18,16 @@ class _RegisterPageState extends State<RegisterPage> {
   TextEditingController _passController = new TextEditingController();
   TextEditingController _phoneController = new TextEditingController();
 
+  final _key = GlobalKey<ScaffoldState>();
 
-  final AuthService _auth = AuthService();
+  //final AuthService _auth = AuthService();
 
   @override
   Widget build(BuildContext context) {
+    final user = Provider.of<UserProvider>(context);
     return Scaffold(
-      body: Stack(
+      key: _key,
+      body: user.status ==Status.Authenticating?Loading():Stack(
         children: <Widget>[
           Container(
             width: MediaQuery.of(context).size.width,
@@ -113,14 +121,11 @@ class _RegisterPageState extends State<RegisterPage> {
                         height: 52,
                         child: RaisedButton(
                           onPressed: () async {
-                            dynamic result = await _auth.registerWithEmailAndPassword(_emailController.text, _passController.text,_nameController.text,_phoneController.text);
-                            if(result==null)
-                            {
-                              print("error");
+                            if(!await user.signUp(_nameController.text ,_emailController.text, _passController.text, _phoneController.text)){
+                              _key.currentState.showSnackBar(SnackBar(content: Text("Sign up failed")));
+                              return;
                             }
-                            else{
-                              Navigator.pop(context);
-                            }
+                            changeScreenReplacement(context, LoginPage());
                           },
                           child: Text(
                             "Sign up",
@@ -158,5 +163,9 @@ class _RegisterPageState extends State<RegisterPage> {
         ],
       ),
     );
+  }
+
+  void changeScreenReplacement(BuildContext context,Widget widget) {
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => widget));
   }
 }

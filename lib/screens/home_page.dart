@@ -1,5 +1,7 @@
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:runningapp/provider/user_provider.dart';
 
 import 'package:runningapp/widgets/count_view.dart';
 

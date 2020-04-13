@@ -9,8 +9,8 @@ class User{
 class UserData{
   static const ID = 'id';
   static const NAME = 'name';
-  static const EMAIL = 'name';
-  static const PHONE = 'name';
+  static const EMAIL = 'email';
+  static const PHONE = 'phone';
   static const PASS = 'pass';
 
   String _id;
@@ -20,6 +20,10 @@ class UserData{
   String _pass;
 
   String get pass => _pass;
+
+  set name(String value) {
+    _name = value;
+  }
 
   String get id => _id;
 
@@ -34,5 +38,17 @@ class UserData{
     _name = data[NAME];
     _email = data[EMAIL];
     _phone = data[PHONE];
+  }
+
+  set email(String value) {
+    _email = value;
+  }
+
+  set phone(String value) {
+    _phone = value;
+  }
+
+  set pass(String value) {
+    _pass = value;
   }
 }

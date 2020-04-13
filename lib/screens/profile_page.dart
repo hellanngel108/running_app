@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:runningapp/provider/user_provider.dart';
 
 class ProfilePage extends StatefulWidget {
   @override
@@ -6,9 +8,15 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  final _key = GlobalKey<ScaffoldState>();
+  bool _isEditName = false;
+  bool _isEditEmail = false;
+  bool _isEditPhone = false;
   @override
   Widget build(BuildContext context) {
+    final user = Provider.of<UserProvider>(context);
     return Scaffold(
+      key: _key,
       appBar: AppBar(
         leading: IconButton(icon: Icon(Icons.arrow_back), onPressed: (){
           Navigator.pop(context);
@@ -73,21 +81,38 @@ class _ProfilePageState extends State<ProfilePage> {
                     child: ListTile(
                       leading: Icon(Icons.person, size: 40,color: Colors.blueAccent,),
                       title: Text("Name",style: TextStyle(fontSize: 18, color: Colors.blueAccent),),
-                      subtitle: Text("Hoàng Minh Hồng",style: TextStyle(fontSize: 16, color: Colors.black, fontWeight: FontWeight.bold),),
+                      subtitle: Text(user.userData.name,style: TextStyle(fontSize: 16, color: Colors.black, fontWeight: FontWeight.bold),),
+                      trailing: IconButton(icon: _isEditName ? Icon(Icons.save):Icon(Icons.edit), onPressed: (){
+                        setState(() {
+                          _isEditName = !_isEditName;
+                        });
+                      })
                     ),
                   ),
                   Card(
                     child: ListTile(
                       leading: Icon(Icons.email, size: 40,color: Colors.blueAccent,),
                       title: Text("Email",style: TextStyle(fontSize: 18, color: Colors.blueAccent),),
-                      subtitle: Text("minhhong0001@gmail.com",style: TextStyle(fontSize: 16, color: Colors.black, fontWeight: FontWeight.bold),),
+                      subtitle: Text(user.userData.email,style: TextStyle(fontSize: 16, color: Colors.black, fontWeight: FontWeight.bold),),
+                      trailing: IconButton(icon: _isEditEmail ? Icon(Icons.save):Icon(Icons.edit),
+                          onPressed: (){
+                            setState(() {
+                              _isEditEmail = !_isEditEmail;
+                            });},
+                        
+                            )
                     ),
                   ),
                   Card(
                     child: ListTile(
                       leading: Icon(Icons.phone, size: 40,color: Colors.blueAccent,),
                       title: Text("Phone",style: TextStyle(fontSize: 18, color: Colors.blueAccent),),
-                      subtitle: Text("123456789",style: TextStyle(fontSize: 16, color: Colors.black, fontWeight: FontWeight.bold),),
+                      subtitle: Text(user.userData.phone,style: TextStyle(fontSize: 16, color: Colors.black, fontWeight: FontWeight.bold),),
+                        trailing: IconButton(icon: _isEditPhone ? Icon(Icons.save):Icon(Icons.edit), onPressed: (){
+                          setState(() {
+                            _isEditPhone = !_isEditPhone;
+                          });
+                        })
                     ),
                   ),
 

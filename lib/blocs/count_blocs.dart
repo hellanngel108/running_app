@@ -22,7 +22,7 @@ void startListening() {
 }
 
 void stopListening() {
-  _subscription.cancel();
+  _subscription.pause();
 }
 void _onData(int stepCountValue) async {
   int preStep;
@@ -34,7 +34,7 @@ void _onData(int stepCountValue) async {
     _stepCount++;
     _stepCountCurrent = stepCountValue;
     print(_stepCount);
-    _stepController.sink.add("OK");
+    _stepController.sink.add(_stepCount);
   }
 }
 

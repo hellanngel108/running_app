@@ -1,6 +1,9 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:runningapp/services/auth.dart';
+import 'package:provider/provider.dart';
+import 'package:runningapp/provider/user_provider.dart';
+
+import 'package:runningapp/widgets/loading.dart';
 
 import 'home_page.dart';
 import 'register_page.dart';
@@ -11,14 +14,16 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-
+  final _key = GlobalKey<ScaffoldState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passController = TextEditingController();
-  final AuthService _auth = AuthService();
+
   @override
   Widget build(BuildContext context) {
+    final user = Provider.of<UserProvider>(context);
     return Scaffold(
-      body: Stack(
+      key: _key,
+      body: user.status == Status.Authenticating ? Loading():Stack(
         children: <Widget>[
           Container(
             width: MediaQuery.of(context).size.width,
@@ -50,7 +55,6 @@ class _LoginPageState extends State<LoginPage> {
                   Padding(
                     padding: const EdgeInsets.fromLTRB(0, 100, 0, 20),
                     child: TextField(
-
                       controller: _emailController,
                       style: TextStyle(fontSize: 16, color: Colors.black),
                       decoration: InputDecoration(
@@ -94,14 +98,15 @@ class _LoginPageState extends State<LoginPage> {
                       height: 52,
                       child: RaisedButton(
                         onPressed: ()async {
-                          dynamic result = await _auth.loginWithEmailAndPassword(_emailController.text, _passController.text);
-                          if(result==null)
-                          {
-                            print("error");
-                          }
+                          if(!await user.signIn("minhhong0001@gmail.com","123456789"))
+                            _key.currentState.showSnackBar(SnackBar(content: Text("Sign in failed")));
                           else{
-                            Navigator.push(context, MaterialPageRoute(builder: (context)=>HomePage()));
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => HomePage()));
                           }
+
                         },
                         child: Text(
                           "Log In",

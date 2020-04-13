@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:runningapp/models/user.dart';
+import 'package:runningapp/provider/user_provider.dart';
 import 'package:runningapp/screens/intro_page.dart';
 import 'package:runningapp/screens/profile_page.dart';
-import 'package:runningapp/services/auth.dart';
 
 class HomeMenu extends StatefulWidget {
   @override
@@ -9,17 +11,18 @@ class HomeMenu extends StatefulWidget {
 }
 
 class _HomeMenuState extends State<HomeMenu> {
-  AuthService _auth = AuthService();
+
+
   @override
   Widget build(BuildContext context) {
+    final user = Provider.of<UserProvider>(context);
     return Drawer(
-
       child: ListView(
         children: <Widget>[
           //Header
           UserAccountsDrawerHeader(
-            accountName: Text('Hoang Minh Hong'),
-            accountEmail: Text('minhhong0001@gmail.com'),
+            accountName: Text(user.userData.name, style: TextStyle(color: Colors.black),),
+            accountEmail: Text(user.userData.email),
             currentAccountPicture: GestureDetector(
               child: CircleAvatar(
                 backgroundColor: Colors.grey,
@@ -53,7 +56,7 @@ class _HomeMenuState extends State<HomeMenu> {
           ),
           InkWell(
             onTap: (){
-              _auth.signOut();
+              user.signOut();
               Navigator.of(context).popUntil((route) => route.isFirst);
             },
             child: ListTile(
